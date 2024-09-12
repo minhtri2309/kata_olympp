@@ -1,3 +1,5 @@
+## La Guerre de Troie !
+
 Les grecs attaquent les troyens.\
 Chaque clan a des armées.\
 Nous voulons connaitre le résultat de la bataille.
@@ -16,23 +18,23 @@ Un régiment de fantassins est caractérisé par :
 
 ## Résolution
 La bataille se déroule en plusieurs tours.\
-A chaque tour, la 1ere armée d'un clan se bat contre la 1ère armée de l'autre clan.\
+A chaque tour, la 1ère armée d'un clan se bat contre la 1ère armée de l'autre clan.\
 On calcule les dégats infligés réciproquement à chaque armée. \
 Pour calculer les dégats entre armée 1 et armée 2 :\
-Attaque armée 1 = Attaque de tous les fantassins de l'armée 1 à laquelle on soustrait la défense de tous les fantassins de l'armée 2.\
-Attaque armée 2 = Attaque de tous les fantassins de l'armée 2 à laquelle on soustrait la défense de tous les fantassins de l'armée 1.
+- Attaque armée 1 = Attaque de tous les fantassins de l'armée 1 à laquelle on soustrait la défense de tous les fantassins de l'armée 2.\
+- Attaque armée 2 = Attaque de tous les fantassins de l'armée 2 à laquelle on soustrait la défense de tous les fantassins de l'armée 1.
 
 Puis on retire, pour chaque armée, le nombre de fantassins tués par l'autre armée :\
 Nombre de fantassins tués = dégats / points de vie par fantassin
 
-Une  armée est suppriméé lorsque son nombre de fantassins atteint 0. L'armée détruite sera remplacée par la suivante pour le prochain tour. \
-Si le clan n'a plus d'armée, il a perdu la bataille
-
 Il y a égalité si aucun vainqueur ne peut être trouvé.
+
+Une  armée est supprimée lorsque son nombre de fantassins atteint 0. L'armée détruite sera remplacée par la suivante pour le prochain tour. \
+Si le clan n'a plus d'armée, il a perdu la bataille.
 
 Chaque résolution de  bataille retourne un rapport de bataille qui contient :
 - le statut de la bataille (gagnée, perdue, égalité)
-- si un clan a gagné, le clan gagnant
+- si un clan a gagné : le clan gagnant
 - la composition des armées initiales de chaque clan
 - historique des tours de bataille (les armées en jeu au cours du tour, les dégats infligés sur chaque armée, le nombre de fantassins vivants dans chaque armée)
 
@@ -123,5 +125,8 @@ Les APIs permettent d'interagir avec le simulateur de bataille :
 - supprimer des armées dans un clan
 - lancer la simulation de bataille entre les deux clans
 
-Une couche de persistence a été définie dans le projet pour retenir la composition des clans et les rapports de bataille. \
-La persistence peut s'effectuer dans une base de données H2 ou dans un cache de mémoire pour une persistence durant le temps de vie de l'application
+Une couche de persistance a été définie dans le projet pour retenir la composition des clans et les rapports de bataille. \
+La persistence peut s'effectuer dans une base de données H2 ou dans un cache de mémoire pour une persistance durant le temps de vie de l'application.
+
+
+## A vous de jouer ! 
