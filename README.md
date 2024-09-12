@@ -1,4 +1,4 @@
-## La Guerre de Troie !
+## Résolvez la Guerre de Troie !
 
 Les grecs attaquent les troyens.\
 Chaque clan a des armées.\
