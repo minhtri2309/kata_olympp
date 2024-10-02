@@ -9,7 +9,7 @@ La bataille oppose deux clans :
 - Le clan troyen
 
 Chaque clan possède des armées : \
-Chaque armée a un nom et est constituée de régiments, uniquement Fantassins pour le moment. \
+Chaque armée a un nom et est constituée de régiments de fantassins uniquement. \
 Un régiment de fantassins est caractérisé par : 
 - un nombre de fantassins
 - un nombre de points de vie par fantassin
