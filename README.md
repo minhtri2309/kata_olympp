@@ -1,15 +1,15 @@
 ## Résolvez la Guerre de Troie !
 
-Les grecs attaquent les troyens.\
-Chaque clan a des armées.\
+Les grecs attaquent les troyens. \
+Chaque clan a des armées. \
 Nous voulons connaitre le résultat de la bataille.
 
 La bataille oppose deux clans : 
 - Le clan grec
 - Le clan troyen
 
-Chaque clan possède des armées :\
-Chaque armée a un nom et est constituée de régiments, uniquement Fantassins pour le moment.\
+Chaque clan possède des armées : \
+Chaque armée a un nom et est constituée de régiments, uniquement Fantassins pour le moment. \
 Un régiment de fantassins est caractérisé par : 
 - un nombre de fantassins
 - un nombre de points de vie par fantassin
@@ -17,14 +17,14 @@ Un régiment de fantassins est caractérisé par :
 - un nombre de points de défense par fantassin
 
 ## Résolution
-La bataille se déroule en plusieurs tours.\
-A chaque tour, la 1ère armée d'un clan se bat contre la 1ère armée de l'autre clan.\
+La bataille se déroule en plusieurs tours. \
+A chaque tour, la 1ère armée d'un clan se bat contre la 1ère armée de l'autre clan. \
 On calcule les dégats infligés réciproquement à chaque armée. \
-Pour calculer les dégats entre armée 1 et armée 2 :\
-- Attaque armée 1 = Attaque de tous les fantassins de l'armée 1 à laquelle on soustrait la défense de tous les fantassins de l'armée 2.\
+Pour calculer les dégats entre armée 1 et armée 2 : \
+- Attaque armée 1 = Attaque de tous les fantassins de l'armée 1 à laquelle on soustrait la défense de tous les fantassins de l'armée 2. \
 - Attaque armée 2 = Attaque de tous les fantassins de l'armée 2 à laquelle on soustrait la défense de tous les fantassins de l'armée 1.
 
-Puis on retire, pour chaque armée, le nombre de fantassins tués par l'autre armée :\
+Puis on retire, pour chaque armée, le nombre de fantassins tués par l'autre armée : \
 Nombre de fantassins tués = dégats / points de vie par fantassin
 
 Il y a égalité si aucun vainqueur ne peut être trouvé.
