@@ -36,7 +36,7 @@ Chaque résolution de  bataille retourne un rapport de bataille qui contient :
 - le statut de la bataille (gagnée, égalité)
 - si un clan a gagné : le clan gagnant
 - la composition des armées initiales de chaque clan avant début de résolution de la bataille
-- historique des tours de bataille (les armées en jeu au cours du tour, les dégats infligés sur chaque armée, le nombre de fantassins vivants dans chaque armée)
+- historique de l'ensemble des tours de bataille (pour chaque tour, préciser les armées qui combattent, les dégats infligés sur chaque armée, le nombre de fantassins vivants dans chaque armée)
 
 ## Exemple du rapport d'une bataille entre grecs et troyens :
 
