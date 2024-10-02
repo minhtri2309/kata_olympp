@@ -95,8 +95,8 @@ Chaque résolution de  bataille retourne un rapport de bataille qui contient :
       "armyName2": "armee2",
       "degatArmy1": -7500,
       "degatArmy2": 5000,
-      "nbFantassins1": 100,
-      "nbFantassins2": 0
+      "nbFantassinsVivant1": 100,
+      "nbFantassinsVivant2": 0
     },
     {
       "armyName1": "armee1",
