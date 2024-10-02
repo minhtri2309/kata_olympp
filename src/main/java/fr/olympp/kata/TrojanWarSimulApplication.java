@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class KataApplication {
+public class TrojanWarSimulApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(KataApplication.class, args);
+        SpringApplication.run(TrojanWarSimulApplication.class, args);
     }
 
 }

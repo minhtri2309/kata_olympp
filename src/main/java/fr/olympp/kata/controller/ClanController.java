@@ -2,7 +2,7 @@ package fr.olympp.kata.controller;
 
 import fr.olympp.kata.models.Army;
 import fr.olympp.kata.models.Clan;
-import fr.olympp.kata.services.ClanServices;
+import fr.olympp.kata.services.ClanService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -10,30 +10,30 @@ import java.util.List;
 @RestController
 @RequestMapping("/clans")
 public class ClanController {
-  private final ClanServices clanServices;
+  private final ClanService clanService;
 
-  public ClanController(ClanServices clanServices) {
-    this.clanServices = clanServices;
+  public ClanController(ClanService clanService) {
+    this.clanService = clanService;
   }
 
   @GetMapping
   public List<Clan> getClans() {
-    return this.clanServices.getClans();
+    return this.clanService.getClans();
   }
 
   @GetMapping("/{clanName}")
   public Clan getClan(@PathVariable String clanName) {
-    return this.clanServices.getClan(clanName);
+    return this.clanService.getClan(clanName);
   }
 
   @PostMapping("/{clanName}/armies")
   public void addArmy(@PathVariable String clanName, @RequestBody Army army) {
-    this.clanServices.addArmy(clanName, army);
+    this.clanService.addArmy(clanName, army);
   }
 
   @DeleteMapping("/{clanName}/armies/{armyName}")
   public void removeArmy(@PathVariable String clanName, @PathVariable String armyName) {
-    this.clanServices.removeArmy(clanName, armyName);
+    this.clanService.removeArmy(clanName, armyName);
   }
 
 }

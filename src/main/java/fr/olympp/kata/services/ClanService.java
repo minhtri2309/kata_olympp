@@ -5,7 +5,7 @@ import fr.olympp.kata.models.Clan;
 
 import java.util.List;
 
-public interface ClanServices {
+public interface ClanService {
   Clan getClan(String clanName);
 
   List<Clan> getClans();
