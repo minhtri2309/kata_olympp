@@ -19,7 +19,7 @@ Un régiment de fantassins est caractérisé par :
 ## Résolution
 La bataille se déroule en plusieurs tours. \
 A chaque tour, la 1ère armée d'un clan se bat contre la 1ère armée de l'autre clan. \
-On calcule les dégats infligés réciproquement à chaque armée. \
+On calcule les dégats infligés simultanément à chaque armée. \
 Pour calculer les dégats entre armée 1 et armée 2 : 
 - Attaque armée 1 = Attaque de tous les fantassins de l'armée 1 à laquelle on soustrait la défense de tous les fantassins de l'armée 2. 
 - Attaque armée 2 = Attaque de tous les fantassins de l'armée 2 à laquelle on soustrait la défense de tous les fantassins de l'armée 1.
