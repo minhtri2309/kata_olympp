@@ -128,7 +128,7 @@ Les APIs permettent d'interagir avec le simulateur de bataille :
 Ajouter une API permettant de retourner un clan avec le details de ses effectifs par armées ainsi que son statut suite a la derniere bataille engagée.
 
 Une couche de persistance a été définie dans le projet pour retenir la composition des clans et les rapports de bataille. \
-La persistence peut s'effectuer dans une base de données H2 ou dans un cache de mémoire pour une persistance durant le temps de vie de l'application.
+La persistence peut éventuellement s'effectuer dans une base de données H2 ou dans un cache de mémoire pour une persistance durant le temps de vie de l'application.
 
 
 ## A vous de jouer ! 
