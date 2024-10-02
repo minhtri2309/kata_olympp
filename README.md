@@ -29,16 +29,16 @@ Nombre de fantassins tués = dégats / points de vie par fantassin
 
 Il y a égalité si aucun vainqueur ne peut être trouvé.
 
-Une  armée est supprimée lorsque son nombre de fantassins atteint 0. L'armée détruite sera remplacée par la suivante pour le prochain tour. \
-Si le clan n'a plus d'armée, il a perdu la bataille.
+Une  armée est décimée lorsque son nombre de fantassins atteint 0. L'armée déciméé sera remplacée par la suivante pour le prochain tour. \
+Si le clan n'a plus d'armées opérationnelles, il a perdu la bataille.
 
 Chaque résolution de  bataille retourne un rapport de bataille qui contient :
-- le statut de la bataille (gagnée, perdue, égalité)
+- le statut de la bataille (gagnée, égalité)
 - si un clan a gagné : le clan gagnant
-- la composition des armées initiales de chaque clan
+- la composition des armées initiales de chaque clan avant début de résolution de la bataille
 - historique des tours de bataille (les armées en jeu au cours du tour, les dégats infligés sur chaque armée, le nombre de fantassins vivants dans chaque armée)
 
-## Exemple de rapport :
+## Exemple du rapport d'une bataille entre grecs et troyens :
 
 ```json
 {
@@ -124,6 +124,8 @@ Les APIs permettent d'interagir avec le simulateur de bataille :
 - ajouter des armées dans un clan
 - supprimer des armées dans un clan
 - lancer la simulation de bataille entre les deux clans
+
+Ajouter une API permettant de retourner un clan avec le details de ses effectifs par armées ainsi que son statut suite a la derniere bataille engagée.
 
 Une couche de persistance a été définie dans le projet pour retenir la composition des clans et les rapports de bataille. \
 La persistence peut s'effectuer dans une base de données H2 ou dans un cache de mémoire pour une persistance durant le temps de vie de l'application.
