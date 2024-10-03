@@ -1,8 +1,9 @@
-## Résolvez la Guerre de Troie !
+# Résolvez la Guerre de Troie !
 
 > Héros développeur, la guerre de Troie fait rage !
 > Votre mission : déterminer l’issue de la bataille et dévoiler qui sortira victorieux. Votre code est votre arme pour analyser les événements, prédire l’issue finale et transmettre les résultats aux stratèges d’Olympp. Soyez astucieux et précis, l’avenir du siège repose sur vos compétences !
 
+## Enoncé
 Les grecs attaquent les troyens. \
 Chaque clan a des armées. \
 Nous voulons connaitre le résultat de la bataille.
