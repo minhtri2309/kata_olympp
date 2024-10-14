@@ -67,12 +67,12 @@ Chaque résolution de  bataille retourne un rapport de bataille qui contient :
           "name": "army1_1",
           "foot_soldiers": {
             "nbUnits": 100,
-            "attack": 1000,
-            "defense": 100,
+            "attack": 100,
+            "defense": 1000,
             "health": 100
           },
-          "armyAttack": 100000,
-          "armyDefense": 10000
+          "armyAttack": 10000,
+          "armyDefense": 100000
         }
       ]
     },
@@ -80,15 +80,18 @@ Chaque résolution de  bataille retourne un rapport de bataille qui contient :
       "name": "Athens",
       "armies": [
         {
-          "name": "army2_2",
+          "name": "army2",
           "foot_soldiers": {
             "nbUnits": 50,
-            "attack": 50,
+            "attack": 500,
             "defense": 500,
             "health": 100
           },
-          "armyAttack": 2500,
+          "armyAttack": 25000,
           "armyDefense": 25000
+        },
+        {
+          
         }
       ]
     }
@@ -97,24 +100,24 @@ Chaque résolution de  bataille retourne un rapport de bataille qui contient :
     {
       "nameArmy1": "army1",
       "nameArmy2": "army2_2",
-      "damageArmy1": -7500,
-      "damageArmy2": 5000,
-      "nbRemainingSoldiersArmy1": 100,
-      "nbRemainingSoldiersArmy2": 0
+      "damageOnArmy1": 15000,
+      "damageOnArmy2": -15000,
+      "nbRemainingSoldiersArmy1": 0,
+      "nbRemainingSoldiersArmy2": 50
     },
     {
-      "nameArmy1": "armee1",
+      "nameArmy1": "armee1_1",
       "nameArmy2": "armee2_2",
-      "damageArmy1": -7500,
-      "damageArmy2": -15000,
+      "damageOnArmy1": -75000,
+      "damageOnArmy2": -15000,
       "nbRemainingSoldiersArmy1": 100,
       "nbRemainingSoldiersArmy2": 50
     },
     {
-      "nameArmy1": "armee1",
+      "nameArmy1": "armee1_1",
       "nameArmy2": "armee2_2",
-      "damageArmy1": -7500,
-      "damageArmy2": -15000,
+      "damageOnArmy1": -75000,
+      "damageOnArmy2": -15000,
       "nbRemainingSoldiersArmy1": 100,
       "nbRemainingSoldiersArmy2": 50
     }
