@@ -1,16 +1,21 @@
 package fr.olympp.kata.services;
 
+import fr.olympp.kata.dto.ClanStatusDTO;
 import fr.olympp.kata.models.Army;
 import fr.olympp.kata.models.Clan;
 
 import java.util.List;
 
 public interface ClanService {
-  Clan getClan(String clanName);
+    void addClan(Clan clan);
 
-  List<Clan> getClans();
+    Clan getClan(String clanName);
 
-  void addArmy(String clanName, Army army);
+    ClanStatusDTO getClanStatus(String clanName);
 
-  void removeArmy(String clanName, String armyName);
+    List<Clan> getClans();
+
+    void addArmy(String clanName, Army army);
+
+    void removeArmy(String clanName, String armyName);
 }

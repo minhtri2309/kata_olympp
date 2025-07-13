@@ -1,16 +1,13 @@
 package fr.olympp.kata.repository;
 
 import fr.olympp.kata.models.Clan;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
+import java.util.Optional;
 
-public interface ClanRepository {
 
-    public void addClan(Clan clan);
+public interface ClanRepository extends JpaRepository<Clan, Long> {
 
-    public Clan updateClan(Clan clan);
+    Optional<Clan> findByName(String name);
 
-    public Clan getClan(String name);
-
-    List<Clan> getClans();
 }
