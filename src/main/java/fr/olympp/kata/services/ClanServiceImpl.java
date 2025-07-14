@@ -13,7 +13,6 @@ import fr.olympp.kata.models.FootSoldier;
 import fr.olympp.kata.models.ResultStatus;
 import fr.olympp.kata.repository.BattleReportRepository;
 import fr.olympp.kata.repository.ClanRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,7 +24,6 @@ public class ClanServiceImpl implements ClanService {
     private ClanRepository clanRepository;
     private BattleReportRepository battleReportRepository;
 
-    @Autowired
     public ClanServiceImpl(ClanRepository clanRepository, BattleReportRepository battleReportRepository) {
         this.clanRepository = clanRepository;
         this.battleReportRepository = battleReportRepository;

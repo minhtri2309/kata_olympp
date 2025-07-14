@@ -6,7 +6,6 @@ import fr.olympp.kata.models.BattleTurn;
 import fr.olympp.kata.models.Clan;
 import fr.olympp.kata.models.ResultStatus;
 import fr.olympp.kata.repository.BattleReportRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,7 +15,6 @@ public class BattleServiceImpl implements BattleService {
 
     private BattleReportRepository battleReportRepository;
 
-    @Autowired
     public BattleServiceImpl(BattleReportRepository battleReportRepository) {
         this.battleReportRepository = battleReportRepository;
     }
