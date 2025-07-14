@@ -8,7 +8,6 @@ import fr.olympp.kata.models.Army;
 import fr.olympp.kata.models.BattleReport;
 import fr.olympp.kata.models.BattleTurn;
 import fr.olympp.kata.models.Clan;
-import fr.olympp.kata.models.FootSoldier;
 import fr.olympp.kata.models.ResultStatus;
 import fr.olympp.kata.repository.BattleReportRepository;
 import fr.olympp.kata.repository.ClanRepository;
@@ -22,8 +21,15 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static fr.olympp.kata.TestUtils.ARMY1;
+import static fr.olympp.kata.TestUtils.ARMY2;
+import static fr.olympp.kata.TestUtils.ATHENS;
+import static fr.olympp.kata.TestUtils.TROY;
+import static fr.olympp.kata.TestUtils.createArmy;
+import static fr.olympp.kata.TestUtils.createClan;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -33,13 +39,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class ClanServiceTest {
-
-    public static final String ATHENS = "Athens";
-    public static final String TROY = "Troy";
-
-    public static final String ARMY1 = "army1";
-    public static final String ARMY2 = "army2";
-
 
     private ClanRepository clanRepository;
     private ClanService clanService;
@@ -54,14 +53,12 @@ public class ClanServiceTest {
 
     @Test
     void shouldAddNewClan() {
-        Clan athens = new Clan();
-        athens.setName(ATHENS);
+        Clan athens = createClan(ATHENS);
         clanService.addClan(athens);
 
         verify(clanRepository).save(athens);
 
-        Clan troy = new Clan();
-        troy.setName(TROY);
+        Clan troy = createClan(TROY);
         clanService.addClan(troy);
         verify(clanRepository).save(troy);
     }
@@ -69,8 +66,7 @@ public class ClanServiceTest {
     @Test
     void shouldNotAddNewClan() {
         when(clanRepository.count()).thenReturn(2L);
-        Clan athens = new Clan();
-        athens.setName(ATHENS);
+        Clan athens = createClan(ATHENS);
 
         assertThrows(ClanNumberLimitException.class, () -> {
             clanService.addClan(athens);
@@ -81,10 +77,8 @@ public class ClanServiceTest {
 
     @Test
     void shouldReturnAllClans() {
-        Clan troy = new Clan();
-        troy.setName(TROY);
-        Clan athens = new Clan();
-        athens.setName(ATHENS);
+        Clan troy = createClan(TROY);
+        Clan athens = createClan(ATHENS);
 
         when(clanRepository.findAll()).thenReturn(List.of(troy, athens));
 
@@ -95,10 +89,9 @@ public class ClanServiceTest {
 
     @Test
     void shouldReturnClanByName() {
-        Clan clan = new Clan();
-        clan.setName(TROY);
+        Clan troy = createClan(TROY);
 
-        when(clanRepository.findByName(TROY)).thenReturn(Optional.of(clan));
+        when(clanRepository.findByName(TROY)).thenReturn(Optional.of(troy));
 
         Clan found = clanService.getClan(TROY);
 
@@ -107,10 +100,9 @@ public class ClanServiceTest {
 
     @Test
     void shouldNotReturnClanByName() {
-        Clan clan = new Clan();
-        clan.setName(TROY);
+        Clan troy = createClan(TROY);
 
-        when(clanRepository.findByName(TROY)).thenReturn(Optional.of(clan));
+        when(clanRepository.findByName(TROY)).thenReturn(Optional.of(troy));
 
         assertThrows(ClanNotFoundException.class, () -> {
             clanService.getClan(ATHENS);
@@ -120,19 +112,13 @@ public class ClanServiceTest {
 
     @Test
     void shouldAddArmyToClan() {
-        Clan clan = new Clan();
-        clan.setName(TROY);
+        Clan troy = createClan(TROY);
 
-        when(clanRepository.findByName(TROY)).thenReturn(Optional.of(clan));
+        when(clanRepository.findByName(TROY)).thenReturn(Optional.of(troy));
 
-        Army army1 = new Army();
-        army1.setName(ARMY1);
-
-        Army army2 = new Army();
-        army2.setName(ARMY2);
-
-        Army army3 = new Army();
-        army3.setName(ARMY2);
+        Army army1 = createArmy(ARMY1, 100, 100, 100, 100);
+        Army army2 = createArmy(ARMY2, 100, 100, 100, 100);
+        Army army3 = createArmy(ARMY2, 100, 100, 100, 100);
 
         clanService.addArmy(TROY, army1);
         clanService.addArmy(TROY, army2);
@@ -144,21 +130,17 @@ public class ClanServiceTest {
 
         assertEquals(2, savedClan.getArmies().size());
         assertThat(savedClan.getArmies()).contains(army1, army3);
-        assertThat(savedClan.getArmies()).doesNotContain(army2);
+        assertFalse(savedClan.getArmies().stream().anyMatch(currentArmy -> currentArmy == army2));
     }
 
     @Test
     void shouldRemoveArmyFromClan() {
-        Clan clan = new Clan();
-        clan.setName(TROY);
+        Clan troy = createClan(TROY);
 
-        when(clanRepository.findByName(TROY)).thenReturn(Optional.of(clan));
+        when(clanRepository.findByName(TROY)).thenReturn(Optional.of(troy));
 
-        Army army1 = new Army();
-        army1.setName(ARMY1);
-
-        Army army2 = new Army();
-        army2.setName(ARMY2);
+        Army army1 = createArmy(ARMY1, 100, 100, 100, 100);
+        Army army2 = createArmy(ARMY2, 100, 100, 100, 100);
 
         clanService.addArmy(TROY, army1);
         clanService.addArmy(TROY, army2);
@@ -175,23 +157,13 @@ public class ClanServiceTest {
 
     @Test
     void shouldGetClanStatus() {
-        Clan troy = new Clan();
-        troy.setName(TROY);
-
-        Clan athens = new Clan();
-        athens.setName(ATHENS);
+        Clan troy = createClan(TROY);
+        Clan athens = createClan(ATHENS);
 
         when(clanRepository.findByName(TROY)).thenReturn(Optional.of(troy));
         when(clanRepository.findByName(ATHENS)).thenReturn(Optional.of(athens));
 
-        Army army1 = new Army();
-        army1.setName(ARMY1);
-        FootSoldier footSoldier = new FootSoldier();
-        footSoldier.setAttack(100);
-        footSoldier.setDefense(100);
-        footSoldier.setNbUnits(100);
-        footSoldier.setHealth(100);
-        army1.setFootSoldiers(footSoldier);
+        Army army1 = createArmy(ARMY1, 100, 100, 100, 100);
 
         Army army2 = new Army();
         army2.setName(ARMY2);

@@ -2,8 +2,10 @@ package fr.olympp.kata.models;
 
 import jakarta.persistence.Embeddable;
 
+import java.io.Serializable;
+
 @Embeddable
-public class FootSoldier {
+public class FootSoldier implements Serializable {
 
     private int nbUnits;
     private int attack;
@@ -11,6 +13,13 @@ public class FootSoldier {
     private int health;
 
     public FootSoldier() {
+    }
+
+    public FootSoldier(FootSoldier original) {
+        this.nbUnits = original.nbUnits;
+        this.attack = original.attack;
+        this.defense = original.defense;
+        this.health = original.health;
     }
 
     public FootSoldier(int nbUnits, int attack, int defense, int health) {
@@ -54,5 +63,29 @@ public class FootSoldier {
 
     public void setNbUnits(int nbUnits) {
         this.nbUnits = nbUnits;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        FootSoldier that = (FootSoldier) o;
+        return nbUnits == that.nbUnits &&
+                attack == that.attack &&
+                defense == that.defense &&
+                health == that.health;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Integer.hashCode(nbUnits);
+        result = 31 * result + Integer.hashCode(attack);
+        result = 31 * result + Integer.hashCode(defense);
+        result = 31 * result + Integer.hashCode(health);
+        return result;
     }
 }

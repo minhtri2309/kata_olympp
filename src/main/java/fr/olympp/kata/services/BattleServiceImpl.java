@@ -9,7 +9,6 @@ import fr.olympp.kata.repository.BattleReportRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -25,7 +24,8 @@ public class BattleServiceImpl implements BattleService {
     @Override
     public BattleReport battle(Clan clan1, Clan clan2) {
         BattleReport battleReport = new BattleReport();
-        battleReport.setInitialClans(Arrays.asList(clan1, clan2));
+
+        battleReport.setInitialClans(List.of(new Clan(clan1), new Clan(clan2)));
 
         processBattleTurns(clan1, clan2, battleReport);
         computeBattleResult(clan1, clan2, battleReport);
@@ -56,19 +56,21 @@ public class BattleServiceImpl implements BattleService {
                 index2++;
             }
 
-            //skip armies if no damage dealt
-            if (battleTurn.getDamageOnArmy1() == 0 && battleTurn.getDamageOnArmy2() == 0) {
-                index1++;
-                index2++;
-            }
 
         }
 
     }
 
     private BattleTurn computeTurn(Army army1, Army army2) {
-        int damageOnArmy1 = Math.max(0, army2.getAttackValue() - army1.getDefenseValue());
-        int damageOnArmy2 = Math.max(0, army1.getAttackValue() - army2.getDefenseValue());
+        int damageOnArmy1 = Math.max(0, army2.getArmyAttack() - army1.getArmyDefense());
+        int damageOnArmy2 = Math.max(0, army1.getArmyAttack() - army2.getArmyDefense());
+
+        //if armies attack deal no damage to each other because they are equally strong,
+        //deal damage without considering defense, considering they all kill each other
+        if (damageOnArmy1 == 0 && damageOnArmy2 == 0) {
+            damageOnArmy1 = army2.getArmyAttack();
+            damageOnArmy2 = army1.getArmyAttack();
+        }
 
         int army1KilledUnits = damageOnArmy1 / army1.getFootSoldiers().getHealth();
         int army2KilledUnits = damageOnArmy2 / army2.getFootSoldiers().getHealth();

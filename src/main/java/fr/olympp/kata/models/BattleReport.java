@@ -2,6 +2,7 @@ package fr.olympp.kata.models;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -28,6 +29,7 @@ public class BattleReport {
     private List<Clan> initialClans;
 
     @ElementCollection
+    @JsonProperty("history")
     private List<BattleTurn> battleTurns = new ArrayList<>();
 
     public BattleReport() {

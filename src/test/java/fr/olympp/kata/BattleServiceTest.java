@@ -2,9 +2,7 @@ package fr.olympp.kata;
 
 import fr.olympp.kata.models.Army;
 import fr.olympp.kata.models.BattleReport;
-import fr.olympp.kata.models.BattleTurn;
 import fr.olympp.kata.models.Clan;
-import fr.olympp.kata.models.FootSoldier;
 import fr.olympp.kata.models.ResultStatus;
 import fr.olympp.kata.repository.BattleReportRepository;
 import fr.olympp.kata.services.BattleService;
@@ -12,19 +10,20 @@ import fr.olympp.kata.services.BattleServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-
+import static fr.olympp.kata.TestUtils.ARMY1;
+import static fr.olympp.kata.TestUtils.ARMY2;
+import static fr.olympp.kata.TestUtils.ATHENS;
+import static fr.olympp.kata.TestUtils.TROY;
+import static fr.olympp.kata.TestUtils.assertBattleTurn;
+import static fr.olympp.kata.TestUtils.assertReportArmy;
+import static fr.olympp.kata.TestUtils.createArmy;
+import static fr.olympp.kata.TestUtils.createClan;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.mock;
 
 public class BattleServiceTest {
 
-    public static final String ATHENS = "Athens";
-    public static final String TROY = "Troy";
-
-    public static final String ARMY1 = "army1";
-    public static final String ARMY2 = "army2";
 
     private BattleService battleService;
     private BattleReportRepository battleReportRepository;
@@ -37,130 +36,99 @@ public class BattleServiceTest {
 
     @Test
     void shouldDeclareTroyWinner() {
-        Clan troy = new Clan();
-        troy.setName(TROY);
+        Clan troy = createClan(TROY);
 
-        Army troyArmy = new Army();
-        troyArmy.setName(TROY + ARMY1);
-        FootSoldier footSoldier = new FootSoldier(100, 100, 100, 100);
-        troyArmy.setFootSoldiers(footSoldier);
+        Army troyArmy = createArmy(TROY + ARMY1, 100, 100, 100, 100);
         troy.addArmy(troyArmy);
 
-        Army troyArmy2 = new Army();
-        troyArmy2.setName(TROY + ARMY2);
-        FootSoldier footSoldier2 = new FootSoldier(100, 100, 100, 100);
-        troyArmy2.setFootSoldiers(footSoldier2);
+        Army troyArmy2 = createArmy(TROY + ARMY2, 100, 100, 100, 100);
         troy.addArmy(troyArmy2);
 
-        Clan athens = new Clan();
-        athens.setName(ATHENS);
+        Clan athens = createClan(ATHENS);
 
-        Army athensArmy = new Army();
-        athensArmy.setName(ATHENS + ARMY1);
-        FootSoldier footSoldier3 = new FootSoldier(50, 50, 50, 50);
-        athensArmy.setFootSoldiers(footSoldier3);
+        Army athensArmy = createArmy(ATHENS + ARMY1, 50, 50, 50, 50);
         athens.addArmy(athensArmy);
 
-        Army athensArmy2 = new Army();
-        athensArmy2.setName(ATHENS + ARMY2);
-        FootSoldier footSoldier4 = new FootSoldier(50, 50, 50, 50);
-        athensArmy2.setFootSoldiers(footSoldier4);
+        Army athensArmy2 = createArmy(ATHENS + ARMY2, 50, 50, 50, 50);
         athens.addArmy(athensArmy2);
 
         BattleReport battleReport = battleService.battle(troy, athens);
-
         assertEquals(TROY, battleReport.getWinner());
         assertEquals(ResultStatus.WON, battleReport.getStatus());
-        assertEquals(List.of(troy, athens), battleReport.getInitialClans());
         assertEquals(2, battleReport.getBattleTurns().size());
 
-        BattleTurn battleTurn = battleReport.getBattleTurns().get(0);
-        assertEquals(TROY + ARMY1, battleTurn.getNameArmy1());
-        assertEquals(ATHENS + ARMY1, battleTurn.getNameArmy2());
-        assertEquals(0, battleTurn.getDamageOnArmy1());
-        assertEquals(7500, battleTurn.getDamageOnArmy2());
-        assertEquals(100, battleTurn.getNbRemainingSoldiersArmy1());
-        assertEquals(0, battleTurn.getNbRemainingSoldiersArmy2());
+        Clan clanReport1 = battleReport.getInitialClans().get(0);
+        Clan clanReport2 = battleReport.getInitialClans().get(1);
 
-        battleTurn = battleReport.getBattleTurns().get(1);
-        assertEquals(TROY + ARMY1, battleTurn.getNameArmy1());
-        assertEquals(ATHENS + ARMY2, battleTurn.getNameArmy2());
-        assertEquals(0, battleTurn.getDamageOnArmy1());
-        assertEquals(7500, battleTurn.getDamageOnArmy2());
-        assertEquals(100, battleTurn.getNbRemainingSoldiersArmy1());
-        assertEquals(0, battleTurn.getNbRemainingSoldiersArmy2());
+        assertEquals(TROY, clanReport1.getName());
+        assertReportArmy(clanReport1.getArmies().get(0), TROY + ARMY1, 100, 100, 100, 100, 10000, 10000);
+        assertReportArmy(clanReport1.getArmies().get(1), TROY + ARMY2, 100, 100, 100, 100, 10000, 10000);
+
+        assertEquals(ATHENS, clanReport2.getName());
+        assertReportArmy(clanReport2.getArmies().get(0), ATHENS + ARMY1, 50, 50, 50, 50, 2500, 2500);
+        assertReportArmy(clanReport2.getArmies().get(1), ATHENS + ARMY2, 50, 50, 50, 50, 2500, 2500);
+
+        assertBattleTurn(battleReport.getBattleTurns().get(0), TROY + ARMY1, ATHENS + ARMY1, 0, 7500, 100, 0);
+        assertBattleTurn(battleReport.getBattleTurns().get(1), TROY + ARMY1, ATHENS + ARMY2, 0, 7500, 100, 0);
+
+
     }
 
     @Test
     void shouldDeclareDraw() {
-        Clan troy = new Clan();
-        troy.setName(TROY);
-
-        Army troyArmy = new Army();
-        troyArmy.setName(TROY + ARMY1);
-        FootSoldier footSoldier = new FootSoldier(100, 200, 100, 100);
-        troyArmy.setFootSoldiers(footSoldier);
+        Clan troy = createClan(TROY);
+        Army troyArmy = createArmy(TROY + ARMY1, 100, 200, 100, 100);
         troy.addArmy(troyArmy);
 
-        Clan athens = new Clan();
-        athens.setName(ATHENS);
-
-        Army athensArmy = new Army();
-        athensArmy.setName(ATHENS + ARMY1);
-        FootSoldier footSoldier3 = new FootSoldier(100, 200, 100, 100);
-        athensArmy.setFootSoldiers(footSoldier3);
+        Clan athens = createClan(ATHENS);
+        Army athensArmy = createArmy(ATHENS + ARMY1, 100, 200, 100, 100);
         athens.addArmy(athensArmy);
 
         BattleReport battleReport = battleService.battle(troy, athens);
 
         assertNull(battleReport.getWinner());
         assertEquals(ResultStatus.DRAW, battleReport.getStatus());
-        assertEquals(List.of(troy, athens), battleReport.getInitialClans());
         assertEquals(1, battleReport.getBattleTurns().size());
 
-        BattleTurn battleTurn = battleReport.getBattleTurns().get(0);
-        assertEquals(TROY + ARMY1, battleTurn.getNameArmy1());
-        assertEquals(ATHENS + ARMY1, battleTurn.getNameArmy2());
-        assertEquals(10000, battleTurn.getDamageOnArmy1());
-        assertEquals(10000, battleTurn.getDamageOnArmy2());
-        assertEquals(0, battleTurn.getNbRemainingSoldiersArmy1());
-        assertEquals(0, battleTurn.getNbRemainingSoldiersArmy2());
+        Clan clanReport1 = battleReport.getInitialClans().get(0);
+        Clan clanReport2 = battleReport.getInitialClans().get(1);
+
+        assertEquals(TROY, clanReport1.getName());
+        assertReportArmy(clanReport1.getArmies().get(0), TROY + ARMY1, 100, 200, 100, 100, 20000, 10000);
+
+        assertEquals(ATHENS, clanReport2.getName());
+        assertReportArmy(clanReport2.getArmies().get(0), ATHENS + ARMY1, 100, 200, 100, 100, 20000, 10000);
+
+        assertBattleTurn(battleReport.getBattleTurns().get(0), TROY + ARMY1, ATHENS + ARMY1, 10000, 10000, 0, 0);
     }
 
     @Test
     void shouldDeclareDrawBecauseNoDamage() {
-        Clan troy = new Clan();
-        troy.setName(TROY);
-
-        Army troyArmy = new Army();
-        troyArmy.setName(TROY + ARMY1);
-        FootSoldier footSoldier = new FootSoldier(100, 100, 100, 100);
-        troyArmy.setFootSoldiers(footSoldier);
+        Clan troy = createClan(TROY);
+        Army troyArmy = createArmy(TROY + ARMY1, 100, 100, 100, 100);
         troy.addArmy(troyArmy);
 
-        Clan athens = new Clan();
-        athens.setName(ATHENS);
-
-        Army athensArmy = new Army();
-        athensArmy.setName(ATHENS + ARMY1);
-        FootSoldier footSoldier3 = new FootSoldier(100, 100, 100, 100);
-        athensArmy.setFootSoldiers(footSoldier3);
+        Clan athens = createClan(ATHENS);
+        Army athensArmy = createArmy(ATHENS + ARMY1, 100, 100, 100, 100);
         athens.addArmy(athensArmy);
 
         BattleReport battleReport = battleService.battle(troy, athens);
 
         assertNull(battleReport.getWinner());
         assertEquals(ResultStatus.DRAW, battleReport.getStatus());
-        assertEquals(List.of(troy, athens), battleReport.getInitialClans());
         assertEquals(1, battleReport.getBattleTurns().size());
 
-        BattleTurn battleTurn = battleReport.getBattleTurns().get(0);
-        assertEquals(TROY + ARMY1, battleTurn.getNameArmy1());
-        assertEquals(ATHENS + ARMY1, battleTurn.getNameArmy2());
-        assertEquals(0, battleTurn.getDamageOnArmy1());
-        assertEquals(0, battleTurn.getDamageOnArmy2());
-        assertEquals(100, battleTurn.getNbRemainingSoldiersArmy1());
-        assertEquals(100, battleTurn.getNbRemainingSoldiersArmy2());
+        Clan clanReport1 = battleReport.getInitialClans().get(0);
+        Clan clanReport2 = battleReport.getInitialClans().get(1);
+
+        assertEquals(TROY, clanReport1.getName());
+        assertReportArmy(clanReport1.getArmies().get(0), TROY + ARMY1, 100, 100, 100, 100, 10000, 10000);
+
+        assertEquals(ATHENS, clanReport2.getName());
+        assertReportArmy(clanReport2.getArmies().get(0), ATHENS + ARMY1, 100, 100, 100, 100, 10000, 10000);
+
+        assertBattleTurn(battleReport.getBattleTurns().get(0), TROY + ARMY1, ATHENS + ARMY1, 10000, 10000, 0, 0);
     }
+
 }
 
