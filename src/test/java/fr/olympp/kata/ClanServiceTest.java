@@ -230,7 +230,6 @@ public class ClanServiceTest {
         assertEquals(100, army1DTO.getAttack());
         assertEquals(100, army1DTO.getDefense());
         assertEquals(100, army1DTO.getHealth());
-        assertEquals(100, army1DTO.getNbUnits()); //todo ?
-
+        assertEquals(100, army1DTO.getNbUnits());
     }
 }
