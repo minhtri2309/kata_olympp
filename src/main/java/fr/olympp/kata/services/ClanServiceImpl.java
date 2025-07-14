@@ -87,16 +87,18 @@ public class ClanServiceImpl implements ClanService {
 
 
     @Override
-    public void addArmy(String clanName, Army army) {
+    public Clan addArmy(String clanName, Army army) {
         Clan clan = getClan(clanName);
         clan.addArmy(army);
         clanRepository.save(clan);
+        return clan;
     }
 
     @Override
-    public void removeArmy(String clanName, String armyName) {
+    public Clan removeArmy(String clanName, String armyName) {
         Clan clan = getClan(clanName);
         clan.removeArmy(armyName);
         clanRepository.save(clan);
+        return clan;
     }
 }

@@ -15,7 +15,7 @@ public interface ClanService {
 
     List<Clan> getClans();
 
-    void addArmy(String clanName, Army army);
+    Clan addArmy(String clanName, Army army);
 
-    void removeArmy(String clanName, String armyName);
+    Clan removeArmy(String clanName, String armyName);
 }

@@ -1,10 +1,19 @@
 package fr.olympp.kata.controller;
 
 import fr.olympp.kata.dto.ClanStatusDTO;
+import fr.olympp.kata.exception.ClanNotFoundException;
+import fr.olympp.kata.exception.ClanNumberLimitException;
 import fr.olympp.kata.models.Army;
 import fr.olympp.kata.models.Clan;
 import fr.olympp.kata.services.ClanService;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -23,27 +32,52 @@ public class ClanController {
     }
 
     @PostMapping
-    public void addClan(@RequestBody Clan clan) {
-        this.clanService.addClan(clan);
+    public ResponseEntity<?> addClan(@RequestBody Clan clan) {
+        try {
+            this.clanService.addClan(clan);
+            return ResponseEntity.ok(clan);
+        } catch (ClanNumberLimitException e) {
+            return ResponseEntity.badRequest().body(clan.getName() + " not added : " + e.getMessage());
+        }
     }
 
     @GetMapping("/{clanName}")
-    public Clan getClan(@PathVariable String clanName) {
-        return this.clanService.getClan(clanName);
+    public ResponseEntity<?> getClan(@PathVariable String clanName) {
+        try {
+            Clan clan = this.clanService.getClan(clanName);
+            return ResponseEntity.ok(clan);
+        } catch (ClanNotFoundException e) {
+            return ResponseEntity.badRequest().body(clanName + " not found : " + e.getMessage());
+        }
     }
 
     @GetMapping("/{clanName}/status")
-    public ClanStatusDTO getClanStatus(@PathVariable String clanName) {
-        return this.clanService.getClanStatus(clanName);
+    public ResponseEntity<?> getClanStatus(@PathVariable String clanName) {
+        try {
+            ClanStatusDTO clanStatus = this.clanService.getClanStatus(clanName);
+            return ResponseEntity.ok(clanStatus);
+        } catch (ClanNotFoundException e) {
+            return ResponseEntity.badRequest().body(clanName + " not found : " + e.getMessage());
+        }
     }
 
     @PostMapping("/{clanName}/armies")
-    public void addArmy(@PathVariable String clanName, @RequestBody Army army) {
-        this.clanService.addArmy(clanName, army);
+    public ResponseEntity<?> addArmy(@PathVariable String clanName, @RequestBody Army army) {
+        try {
+            Clan clan = this.clanService.addArmy(clanName, army);
+            return ResponseEntity.ok(clan);
+        } catch (ClanNotFoundException e) {
+            return ResponseEntity.badRequest().body(clanName + " not found : " + e.getMessage());
+        }
     }
 
     @DeleteMapping("/{clanName}/armies/{armyName}")
-    public void removeArmy(@PathVariable String clanName, @PathVariable String armyName) {
-        this.clanService.removeArmy(clanName, armyName);
+    public ResponseEntity<?> removeArmy(@PathVariable String clanName, @PathVariable String armyName) {
+        try {
+            Clan clan = this.clanService.removeArmy(clanName, armyName);
+            return ResponseEntity.ok(clan);
+        } catch (ClanNotFoundException e) {
+            return ResponseEntity.badRequest().body(clanName + " not found : " + e.getMessage());
+        }
     }
 }
