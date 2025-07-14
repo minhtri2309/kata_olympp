@@ -2,6 +2,8 @@ package fr.olympp.kata.services;
 
 import fr.olympp.kata.dto.ArmyDTO;
 import fr.olympp.kata.dto.ClanStatusDTO;
+import fr.olympp.kata.exception.ArmyNotFoundException;
+import fr.olympp.kata.exception.ClanAlreadyExistsException;
 import fr.olympp.kata.exception.ClanNotFoundException;
 import fr.olympp.kata.exception.ClanNumberLimitException;
 import fr.olympp.kata.models.Army;
@@ -31,10 +33,15 @@ public class ClanServiceImpl implements ClanService {
 
     @Override
     public void addClan(Clan clan) {
-        if (clanRepository.count() < 2) {
-            clanRepository.save(clan);
+        boolean clanExists = clanRepository.findByName(clan.getName()).isPresent();
+        if (!clanExists) {
+            if (clanRepository.count() < 2) {
+                clanRepository.save(clan);
+            } else {
+                throw new ClanNumberLimitException();
+            }
         } else {
-            throw new ClanNumberLimitException();
+            throw new ClanAlreadyExistsException(clan.getName());
         }
     }
 
@@ -97,8 +104,12 @@ public class ClanServiceImpl implements ClanService {
     @Override
     public Clan removeArmy(String clanName, String armyName) {
         Clan clan = getClan(clanName);
-        clan.removeArmy(armyName);
-        clanRepository.save(clan);
-        return clan;
+        if (clan.doesArmyExists(armyName)) {
+            clan.removeArmy(armyName);
+            clanRepository.save(clan);
+            return clan;
+        } else {
+            throw new ArmyNotFoundException(armyName);
+        }
     }
 }

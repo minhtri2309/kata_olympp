@@ -22,12 +22,14 @@ import static fr.olympp.kata.TestUtils.ATHENS;
 import static fr.olympp.kata.TestUtils.TROY;
 import static fr.olympp.kata.TestUtils.assertBattleTurn;
 import static fr.olympp.kata.TestUtils.assertReportArmy;
+import static fr.olympp.kata.TestUtils.battle;
 import static fr.olympp.kata.TestUtils.createArmy;
 import static fr.olympp.kata.TestUtils.createClan;
+import static fr.olympp.kata.TestUtils.postArmy;
+import static fr.olympp.kata.TestUtils.postClan;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -54,29 +56,13 @@ public class BattleIntegrationTest {
     }
 
 
-    private void postClan(Clan clan) throws Exception {
-        mockMvc.perform(post("/clans")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsBytes(clan)))
-                .andExpect(status().isOk());
-    }
-
-    private void postArmy(String clanName, Army army) throws Exception {
-        mockMvc.perform(post("/clans/" + clanName + "/armies")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsBytes(army)))
-                .andExpect(status().isOk());
-    }
-
     @Test
     void shouldDeclareTroyWinner() throws Exception {
         Clan troy = createClan(TROY);
         Clan athens = createClan(ATHENS);
 
-        postClan(troy);
-        postClan(athens);
+        postClan(mockMvc, objectMapper, troy);
+        postClan(mockMvc, objectMapper, athens);
 
         Army troyArmy = createArmy(TROY + ARMY1, 100, 100, 100, 100);
         Army troyArmy2 = createArmy(TROY + ARMY2, 100, 100, 100, 100);
@@ -84,11 +70,11 @@ public class BattleIntegrationTest {
         Army athensArmy = createArmy(ATHENS + ARMY1, 50, 50, 50, 50);
         Army athensArmy2 = createArmy(ATHENS + ARMY2, 50, 50, 50, 50);
 
-        postArmy(TROY, troyArmy);
-        postArmy(TROY, troyArmy2);
+        postArmy(mockMvc, objectMapper, TROY, troyArmy);
+        postArmy(mockMvc, objectMapper, TROY, troyArmy2);
 
-        postArmy(ATHENS, athensArmy);
-        postArmy(ATHENS, athensArmy2);
+        postArmy(mockMvc, objectMapper, ATHENS, athensArmy);
+        postArmy(mockMvc, objectMapper, ATHENS, athensArmy2);
 
         MvcResult mvcResult = mockMvc.perform(get("/battles")
                         .accept(MediaType.APPLICATION_JSON))
@@ -123,18 +109,16 @@ public class BattleIntegrationTest {
         Clan troy = createClan(TROY);
         Clan athens = createClan(ATHENS);
 
-        postClan(troy);
-        postClan(athens);
+        postClan(mockMvc, objectMapper, troy);
+        postClan(mockMvc, objectMapper, athens);
 
         Army troyArmy = createArmy(TROY + ARMY1, 100, 200, 100, 100);
         Army athensArmy = createArmy(ATHENS + ARMY1, 100, 200, 100, 100);
 
-        postArmy(TROY, troyArmy);
-        postArmy(ATHENS, athensArmy);
+        postArmy(mockMvc, objectMapper, TROY, troyArmy);
+        postArmy(mockMvc, objectMapper, ATHENS, athensArmy);
 
-        MvcResult mvcResult = mockMvc.perform(get("/battles")
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk()).andReturn();
+        MvcResult mvcResult = battle(mockMvc);
 
         String jsonResponse = mvcResult.getResponse().getContentAsString();
 

@@ -1,6 +1,8 @@
 package fr.olympp.kata.controller;
 
 import fr.olympp.kata.dto.ClanStatusDTO;
+import fr.olympp.kata.exception.ArmyNotFoundException;
+import fr.olympp.kata.exception.ClanAlreadyExistsException;
 import fr.olympp.kata.exception.ClanNotFoundException;
 import fr.olympp.kata.exception.ClanNumberLimitException;
 import fr.olympp.kata.models.Army;
@@ -36,7 +38,7 @@ public class ClanController {
         try {
             this.clanService.addClan(clan);
             return ResponseEntity.ok(clan);
-        } catch (ClanNumberLimitException e) {
+        } catch (ClanNumberLimitException | ClanAlreadyExistsException e) {
             return ResponseEntity.badRequest().body(clan.getName() + " not added : " + e.getMessage());
         }
     }
@@ -78,6 +80,9 @@ public class ClanController {
             return ResponseEntity.ok(clan);
         } catch (ClanNotFoundException e) {
             return ResponseEntity.badRequest().body(clanName + " not found : " + e.getMessage());
+        } catch (ArmyNotFoundException e) {
+            return ResponseEntity.badRequest().body(armyName + " not found : " + e.getMessage());
+
         }
     }
 }

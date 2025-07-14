@@ -2,6 +2,8 @@ package fr.olympp.kata;
 
 import fr.olympp.kata.dto.ArmyDTO;
 import fr.olympp.kata.dto.ClanStatusDTO;
+import fr.olympp.kata.exception.ArmyNotFoundException;
+import fr.olympp.kata.exception.ClanAlreadyExistsException;
 import fr.olympp.kata.exception.ClanNotFoundException;
 import fr.olympp.kata.exception.ClanNumberLimitException;
 import fr.olympp.kata.models.Army;
@@ -64,7 +66,19 @@ public class ClanServiceTest {
     }
 
     @Test
-    void shouldNotAddNewClan() {
+    void shouldNotAddNewClanBecauseOfNameAlreadyExists() {
+        Clan athens = createClan(ATHENS);
+        when(clanRepository.findByName(ATHENS)).thenReturn(Optional.of(athens));
+
+        assertThrows(ClanAlreadyExistsException.class, () -> {
+            clanService.addClan(athens);
+        });
+
+        verify(clanRepository, never()).save(any());
+    }
+
+    @Test
+    void shouldNotAddNewClanBecauseOfLimit() {
         when(clanRepository.count()).thenReturn(2L);
         Clan athens = createClan(ATHENS);
 
@@ -109,7 +123,6 @@ public class ClanServiceTest {
         });
     }
 
-
     @Test
     void shouldAddArmyToClan() {
         Clan troy = createClan(TROY);
@@ -134,6 +147,19 @@ public class ClanServiceTest {
     }
 
     @Test
+    void shouldNotAddArmyBecauseClanNotFound() {
+        Clan troy = createClan(TROY);
+
+        when(clanRepository.findByName(TROY)).thenReturn(Optional.of(troy));
+
+        Army army1 = createArmy(ARMY1, 100, 100, 100, 100);
+
+        assertThrows(ClanNotFoundException.class, () -> {
+            clanService.addArmy(ATHENS, army1);
+        });
+    }
+
+    @Test
     void shouldRemoveArmyFromClan() {
         Clan troy = createClan(TROY);
 
@@ -153,6 +179,16 @@ public class ClanServiceTest {
 
         assertThat(savedClan.getArmies()).doesNotContain(army1);
         assertThat(savedClan.getArmies()).contains(army2);
+    }
+
+    @Test
+    void shouldNotRemoveArmyBecauseUnknownArmy() {
+        Clan troy = createClan(TROY);
+        when(clanRepository.findByName(TROY)).thenReturn(Optional.of(troy));
+
+        assertThrows(ArmyNotFoundException.class, () -> {
+            clanService.removeArmy(TROY, ARMY1);
+        });
     }
 
     @Test

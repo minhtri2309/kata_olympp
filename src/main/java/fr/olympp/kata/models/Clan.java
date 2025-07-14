@@ -44,7 +44,6 @@ public class Clan {
         }
     }
 
-
     public String getName() {
         return name;
     }
@@ -58,7 +57,6 @@ public class Clan {
         army.setClan(this);
     }
 
-
     public void removeArmy(String armyName) {
         Army removedArmy = armies.remove(armyName);
         if (removedArmy != null) {
@@ -68,6 +66,10 @@ public class Clan {
 
     public List<Army> getArmies() {
         return new ArrayList<>(armies.values());
+    }
+
+    public boolean doesArmyExists(String armyName) {
+        return armies.containsKey(armyName);
     }
 
     public void setArmies(List<Army> armies) {

@@ -1,12 +1,18 @@
 package fr.olympp.kata;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import fr.olympp.kata.models.Army;
-import fr.olympp.kata.models.BattleReport;
 import fr.olympp.kata.models.BattleTurn;
 import fr.olympp.kata.models.Clan;
 import fr.olympp.kata.models.FootSoldier;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 public class TestUtils {
 
@@ -30,13 +36,55 @@ public class TestUtils {
         return army;
     }
 
-    public static void assertInitialClansValue(Clan clan1, Clan clan2, BattleReport battleReport) {
-        Clan clan1Report = battleReport.getInitialClans().get(0);
-        Clan clan2Report = battleReport.getInitialClans().get(1);
-
-        assertEquals(clan1, clan1Report);
-        assertEquals(clan2, clan2Report);
+    public static MvcResult getClan(MockMvc mockMvc, String clanName) throws Exception {
+        return mockMvc.perform(get("/clans/" + clanName)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn();
     }
+
+    public static MvcResult getAllClans(MockMvc mockMvc) throws Exception {
+        return mockMvc.perform(get("/clans")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn();
+    }
+
+    public static MvcResult postClan(MockMvc mockMvc, ObjectMapper objectMapper, Clan clan) throws Exception {
+        return mockMvc.perform(post("/clans")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(clan)))
+                .andReturn();
+    }
+
+    public static MvcResult postArmy(MockMvc mockMvc, ObjectMapper objectMapper, String clanName, Army army) throws Exception {
+        return mockMvc.perform(post("/clans/" + clanName + "/armies")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(army)))
+                .andReturn();
+    }
+
+    public static MvcResult removeArmy(MockMvc mockMvc, ObjectMapper objectMapper, String clanName, String armyName) throws Exception {
+        return mockMvc.perform(delete("/clans/" + clanName + "/armies/" + armyName)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn();
+    }
+
+    public static MvcResult getClanStatus(MockMvc mockMvc, String clanName) throws Exception {
+        return mockMvc.perform(get("/clans/" + clanName + "/status")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn();
+    }
+
+    public static MvcResult battle(MockMvc mockMvc) throws Exception {
+        return mockMvc.perform(get("/battles")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andReturn();
+    }
+
 
     public static void assertReportArmy(Army army, String name, int nbUnits, int attack, int defense, int health, int armyAttack, int armyDefense) {
         assertEquals(name, army.getName());
