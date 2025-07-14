@@ -14,11 +14,11 @@ import java.util.List;
 @Service
 public class BattleServiceImpl implements BattleService {
 
-    private BattleReportRepository repository;
+    private BattleReportRepository battleReportRepository;
 
     @Autowired
-    public BattleServiceImpl(BattleReportRepository repository) {
-        this.repository = repository;
+    public BattleServiceImpl(BattleReportRepository battleReportRepository) {
+        this.battleReportRepository = battleReportRepository;
     }
 
     @Override
@@ -30,7 +30,7 @@ public class BattleServiceImpl implements BattleService {
         processBattleTurns(clan1, clan2, battleReport);
         computeBattleResult(clan1, clan2, battleReport);
 
-
+        battleReportRepository.save(battleReport);
         return battleReport;
     }
 
@@ -55,7 +55,6 @@ public class BattleServiceImpl implements BattleService {
             if (currentArmy2.isDecimated()) {
                 index2++;
             }
-
 
         }
 
@@ -85,7 +84,7 @@ public class BattleServiceImpl implements BattleService {
         boolean isClan1Alive = clan1.isAlive();
         boolean isClan2Alive = clan2.isAlive();
 
-        if (isClan1Alive && isClan2Alive || !isClan1Alive && !isClan2Alive) {
+        if (!isClan1Alive && !isClan2Alive) {
             battleReport.setStatus(ResultStatus.DRAW);
         } else if (!isClan1Alive) {
             battleReport.setStatus(ResultStatus.WON);

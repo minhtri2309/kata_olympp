@@ -37,7 +37,6 @@ public class Army {
         this.clan = original.clan;
     }
 
-
     public int getArmyAttack() {
         return footSoldiers.getNbUnits() * footSoldiers.getAttack();
     }
@@ -51,7 +50,6 @@ public class Army {
         return footSoldiers.getNbUnits();
     }
 
-    //todo ?
     public void removeUnits(int nbUnits) {
         footSoldiers.removeUnits(nbUnits);
     }
@@ -65,7 +63,6 @@ public class Army {
     public Long getId() {
         return id;
     }
-
 
     public void setId(Long id) {
         this.id = id;

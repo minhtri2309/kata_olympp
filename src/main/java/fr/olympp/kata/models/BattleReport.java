@@ -8,7 +8,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.Transient;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,8 +25,8 @@ public class BattleReport {
 
     private ResultStatus status;
 
-    @OneToMany
-    private List<Clan> initialClans;
+    @Transient
+    private List<Clan> initialClans = new ArrayList<>();
 
     @ElementCollection
     @JsonProperty("history")

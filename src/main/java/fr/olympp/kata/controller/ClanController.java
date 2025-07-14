@@ -82,7 +82,6 @@ public class ClanController {
             return ResponseEntity.badRequest().body(clanName + " not found : " + e.getMessage());
         } catch (ArmyNotFoundException e) {
             return ResponseEntity.badRequest().body(armyName + " not found : " + e.getMessage());
-
         }
     }
 }

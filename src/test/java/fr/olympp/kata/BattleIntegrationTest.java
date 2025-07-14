@@ -12,7 +12,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -29,6 +31,7 @@ import static fr.olympp.kata.TestUtils.postArmy;
 import static fr.olympp.kata.TestUtils.postClan;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -140,4 +143,20 @@ public class BattleIntegrationTest {
         assertBattleTurn(battleReport.getBattleTurns().get(0), TROY + ARMY1, ATHENS + ARMY1, 10000, 10000, 0, 0);
 
     }
+
+    @Test
+    void shouldNotStartWar() throws Exception {
+        Clan troy = createClan(TROY);
+
+        postClan(mockMvc, objectMapper, troy);
+
+        Army troyArmy = createArmy(TROY + ARMY1, 100, 200, 100, 100);
+
+        postArmy(mockMvc, objectMapper, TROY, troyArmy);
+
+        MockHttpServletResponse response = battle(mockMvc).getResponse();
+        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
+        assertTrue(response.getContentAsString().contains("2 clans are needed to start a battle"));
+    }
+
 }

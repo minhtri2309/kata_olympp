@@ -21,6 +21,7 @@ import java.util.List;
 @Service
 public class ClanServiceImpl implements ClanService {
 
+    public static final int MAX_CLAN_COUNT = 2;
     private ClanRepository clanRepository;
     private BattleReportRepository battleReportRepository;
 
@@ -35,7 +36,7 @@ public class ClanServiceImpl implements ClanService {
     public void addClan(Clan clan) {
         boolean clanExists = clanRepository.findByName(clan.getName()).isPresent();
         if (!clanExists) {
-            if (clanRepository.count() < 2) {
+            if (clanRepository.count() < MAX_CLAN_COUNT) {
                 clanRepository.save(clan);
             } else {
                 throw new ClanNumberLimitException();
@@ -62,17 +63,7 @@ public class ClanServiceImpl implements ClanService {
         ClanStatusDTO clanStatusDTO = new ClanStatusDTO();
         clanStatusDTO.setName(clanName);
 
-        List<ArmyDTO> armyDTOs = clan.getArmies().stream().map(army -> {
-            FootSoldier footSoldier = army.getFootSoldiers();
-            ArmyDTO currentArmyDTO = new ArmyDTO();
-            currentArmyDTO.setName(army.getName());
-            currentArmyDTO.setNbUnits(footSoldier.getNbUnits());
-            currentArmyDTO.setAttack(footSoldier.getAttack());
-            currentArmyDTO.setDefense(footSoldier.getDefense());
-            currentArmyDTO.setHealth(footSoldier.getHealth());
-            return currentArmyDTO;
-        }).toList();
-
+        List<ArmyDTO> armyDTOs = clan.getArmies().stream().map(this::computeArmyDTO).toList();
         clanStatusDTO.setArmies(armyDTOs);
 
         BattleReport lastReport = battleReportRepository.findTopByOrderByIdDesc();
@@ -86,7 +77,6 @@ public class ClanServiceImpl implements ClanService {
             } else {
                 clanStatusDTO.setLastBattleStatus(ResultStatus.DRAW);
             }
-
         }
 
         return clanStatusDTO;
@@ -111,5 +101,16 @@ public class ClanServiceImpl implements ClanService {
         } else {
             throw new ArmyNotFoundException(armyName);
         }
+    }
+
+    private ArmyDTO computeArmyDTO(Army army) {
+        FootSoldier foot = army.getFootSoldiers();
+        ArmyDTO dto = new ArmyDTO();
+        dto.setName(army.getName());
+        dto.setNbUnits(foot.getNbUnits());
+        dto.setAttack(foot.getAttack());
+        dto.setDefense(foot.getDefense());
+        dto.setHealth(foot.getHealth());
+        return dto;
     }
 }
